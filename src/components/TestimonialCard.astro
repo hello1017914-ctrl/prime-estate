@@ -1,0 +1,54 @@
+---
+import type { Testimonial } from "../data/testimonials";
+
+interface Props {
+  testimonial: Testimonial;
+  featured?: boolean;
+}
+
+const { testimonial, featured = false } = Astro.props;
+---
+
+<article
+  class:list={[
+    "group overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 hover:-translate-y-1 hover:shadow-soft",
+    featured ? "md:col-span-2" : "",
+  ]}
+>
+  <a
+    href={`/client-stories#${testimonial.slug}`}
+    class="grid h-full focus-visible:outline-offset-4 md:grid-cols-[0.9fr_1.1fr]"
+  >
+    <div class="relative aspect-[4/3] overflow-hidden md:aspect-auto md:min-h-[240px]">
+      <img
+        src={testimonial.image}
+        alt={`${testimonial.attribution}`}
+        class="img-zoom h-full w-full object-cover"
+        loading="lazy"
+        width="800"
+        height="600"
+      />
+    </div>
+    <div class="flex flex-col justify-center p-6 sm:p-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-forest">
+        {testimonial.title}
+      </p>
+      <p
+        class:list={[
+          "mt-3 font-semibold tracking-tight text-ink text-balance",
+          featured ? "text-xl sm:text-2xl" : "text-lg",
+        ]}
+      >
+        “{testimonial.quote}”
+      </p>
+      <footer class="mt-5">
+        <p class="text-sm font-bold text-ink">{testimonial.attribution}</p>
+        {
+          testimonial.role ? (
+            <p class="mt-0.5 text-sm text-muted">{testimonial.role}</p>
+          ) : null
+        }
+      </footer>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/Button.astro";
+import ContactForm from "../../components/ContactForm.astro";
+import { properties, formatPrice, getPropertyBySlug } from "../../data/properties";
+
+export function getStaticPaths() {
+  return properties.map((property) => ({
+    params: { slug: property.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const property = getPropertyBySlug(slug!)!;
+---
+
+<BaseLayout
+  title={property.address}
+  description={`${property.address} - ${formatPrice(property.price)}, ${property.beds} beds, ${property.baths} baths in ${property.neighborhood}.`}
+  image={property.image}
+>
+  <section class="bg-snow pb-16 pt-28 sm:pt-32">
+    <div class="container-site">
+      <a href="/buy" class="text-sm font-semibold text-forest hover:underline"
+        >← Back to listings</a
+      >
+
+      <div class="mt-6 overflow-hidden rounded-3xl bg-mist shadow-card">
+        <img
+          src={property.image}
+          alt={`Photo related to ${property.address}`}
+          class="aspect-[16/9] w-full object-cover"
+          width="1200"
+          height="675"
+          fetchpriority="high"
+        />
+      </div>
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <div>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="rounded-full bg-lime-soft px-3 py-1 text-xs font-semibold text-forest">
+              {property.status === "Sample" ? "Sample listing" : property.status}
+            </span>
+            <span class="text-sm text-muted">{property.type}</span>
+          </div>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+            {property.address}
+          </h1>
+          <p class="mt-2 text-muted">
+            {property.neighborhood} · {property.city}, {property.state}{" "}
+            {property.zip}
+          </p>
+          <p class="mt-4 text-3xl font-bold text-forest">
+            {formatPrice(property.price)}
+          </p>
+
+          <dl class="mt-6 flex flex-wrap gap-3">
+            <div class="rounded-full bg-white px-4 py-2 text-sm font-medium shadow-card">
+              <dt class="sr-only">Beds</dt>
+              <dd>{property.beds} beds</dd>
+            </div>
+            <div class="rounded-full bg-white px-4 py-2 text-sm font-medium shadow-card">
+              <dt class="sr-only">Baths</dt>
+              <dd>{property.baths} baths</dd>
+            </div>
+            <div class="rounded-full bg-white px-4 py-2 text-sm font-medium shadow-card">
+              <dt class="sr-only">Size</dt>
+              <dd>{property.sqft.toLocaleString()} sq ft</dd>
+            </div>
+          </dl>
+
+          <div class="mt-8 space-y-4 text-muted leading-relaxed">
+            <p>{property.description}</p>
+            {
+              property.sampleNote ? (
+                <p class="rounded-2xl bg-lime-soft/40 px-4 py-3 text-sm text-forest">
+                  {property.sampleNote}
+                </p>
+              ) : null
+            }
+          </div>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <Button href="/contact?type=buy" variant="primary">Inquire about this home</Button>
+            <Button href="/buy" variant="secondary">More listings</Button>
+          </div>
+        </div>
+
+        <ContactForm heading="Ask about this home" defaultType="buy" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

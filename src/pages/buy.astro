@@ -1,0 +1,141 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PropertyCard from "../components/PropertyCard.astro";
+import Button from "../components/Button.astro";
+import { filterProperties, properties } from "../data/properties";
+
+const params = Astro.url.searchParams;
+const filters = {
+  location: params.get("location") || "all",
+  maxPrice: params.get("maxPrice") ? Number(params.get("maxPrice")) : undefined,
+  beds: params.get("beds") ? Number(params.get("beds")) : undefined,
+  type: params.get("type") || "all",
+  status: params.get("status") || "all",
+};
+
+const results = filterProperties(filters);
+---
+
+<BaseLayout
+  title="Buy a Home"
+  description="Buy a home in Houston Heights and surrounding neighborhoods with Mary Wassef - local expertise and a dedicated support team."
+>
+  <section class="bg-forest-deep pb-16 pt-32 text-white">
+    <div class="container-site max-w-3xl">
+      <p class="text-sm font-semibold text-lime">Buy</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl text-balance">
+        Buy a home
+      </h1>
+      <p class="mt-4 max-w-2xl text-white/75 leading-relaxed">
+        From operations and marketing to transaction coordination, Mary’s team
+        stays on every search until you find the right home.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-snow py-16 sm:py-20">
+    <div class="container-site">
+      <form
+        method="get"
+        class="grid gap-3 rounded-3xl bg-white p-4 shadow-card sm:p-5 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]"
+      >
+        <label class="block">
+          <span class="mb-1.5 block text-xs font-semibold text-muted">Location</span>
+          <select
+            name="location"
+            class="w-full rounded-2xl border border-line bg-snow px-3 py-3 text-sm"
+          >
+            <option value="all" selected={filters.location === "all"}>All areas</option>
+            <option value="Acres Place" selected={filters.location === "Acres Place"}
+              >Acres Place</option
+            >
+            <option value="Heights" selected={filters.location === "Heights"}
+              >Houston Heights</option
+            >
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1.5 block text-xs font-semibold text-muted">Max price</span>
+          <select
+            name="maxPrice"
+            class="w-full rounded-2xl border border-line bg-snow px-3 py-3 text-sm"
+          >
+            <option value="" selected={!filters.maxPrice}>Any</option>
+            <option value="320000" selected={filters.maxPrice === 320000}>$320K</option>
+            <option value="350000" selected={filters.maxPrice === 350000}>$350K</option>
+            <option value="500000" selected={filters.maxPrice === 500000}>$500K</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1.5 block text-xs font-semibold text-muted">Bedrooms</span>
+          <select
+            name="beds"
+            class="w-full rounded-2xl border border-line bg-snow px-3 py-3 text-sm"
+          >
+            <option value="" selected={!filters.beds}>Any</option>
+            <option value="3" selected={filters.beds === 3}>3+</option>
+            <option value="4" selected={filters.beds === 4}>4+</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1.5 block text-xs font-semibold text-muted">Type</span>
+          <select
+            name="type"
+            class="w-full rounded-2xl border border-line bg-snow px-3 py-3 text-sm"
+          >
+            <option value="all" selected={filters.type === "all"}>Any</option>
+            <option value="Single Family" selected={filters.type === "Single Family"}
+              >Single Family</option
+            >
+          </select>
+        </label>
+        <div class="flex items-end">
+          <button
+            type="submit"
+            class="w-full rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white hover:bg-ink-soft"
+          >
+            Apply filters
+          </button>
+        </div>
+      </form>
+
+      <p class="mt-6 text-sm text-muted">
+        Showing {results.length} of {properties.length} sample listings. These are
+        clearly labeled development samples from published marketing - not a live
+        MLS feed.
+      </p>
+
+      {
+        results.length > 0 ? (
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {results.map((property) => (
+              <PropertyCard property={property} />
+            ))}
+          </div>
+        ) : (
+          <div class="mt-10 rounded-3xl bg-white p-10 text-center shadow-card">
+            <h2 class="text-xl font-bold text-ink">No homes match these filters</h2>
+            <p class="mt-2 text-muted">
+              Try broadening your search, or contact Mary for homes that fit your list.
+            </p>
+            <div class="mt-6 flex justify-center gap-3">
+              <Button href="/buy" variant="secondary">Clear filters</Button>
+              <Button href="/contact" variant="primary">Ask Mary</Button>
+            </div>
+          </div>
+        )
+      }
+
+      <div class="mt-12 rounded-3xl bg-forest p-8 text-white sm:p-10">
+        <h2 class="text-2xl font-bold tracking-tight">Need a guided search?</h2>
+        <p class="mt-3 max-w-xl text-white/75">
+          Share your must-haves and Mary will help you navigate Heights-area
+          inventory with local insight.
+        </p>
+        <div class="mt-6">
+          <Button href="/contact?type=buy" variant="primary">Start a buyer consultation</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

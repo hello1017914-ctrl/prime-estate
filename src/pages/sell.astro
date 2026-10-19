@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import ContactForm from "../components/ContactForm.astro";
+
+const steps = [
+  {
+    n: "01",
+    title: "In-home consultation",
+    copy: "A complimentary consultation to maximize your home’s market appeal, with a plan tailored to your goals and partnerships across Heights builders and associations.",
+  },
+  {
+    n: "02",
+    title: "Comparative pricing analysis",
+    copy: "A comparative market analysis to price correctly the first time, avoiding guesses that leave a home sitting or undervalued.",
+  },
+  {
+    n: "03",
+    title: "Photography & print marketing",
+    copy: "Professional photos, promotional flyers, Google Ads, landing pages, and social campaigns from Mary’s marketing and design resources.",
+  },
+  {
+    n: "04",
+    title: "Open houses & documentation",
+    copy: "Seller’s disclosures, lead-based paint paperwork for historic homes, proof of updates, plans, and every detail that can add value or smooth diligence.",
+  },
+  {
+    n: "05",
+    title: "Offers & negotiations",
+    copy: "Certified negotiation expertise and deep local Realtor relationships to demand the value your home deserves.",
+  },
+  {
+    n: "06",
+    title: "An easy close",
+    copy: "Transaction and operations support through title and closing, so the last steps stay organized.",
+  },
+];
+---
+
+<BaseLayout
+  title="Sell a Home"
+  description="Sell your Houston Heights home with Mary Wassef - consultation, pricing, marketing, negotiation, and a smooth closing."
+>
+  <section class="bg-forest-deep pb-16 pt-32 text-white">
+    <div class="container-site max-w-3xl">
+      <p class="text-sm font-semibold text-lime">Sell</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl text-balance">
+        Sell a home
+      </h1>
+      <p class="mt-4 max-w-2xl text-white/75 leading-relaxed">
+        Mary takes every step to ensure your listing is properly prepared, priced,
+        marketed, and sold with care - using today’s top marketing resources and a
+        professional team.
+      </p>
+      <div class="mt-8">
+        <Button href="#valuation" variant="primary">Request a selling consultation</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-snow py-16 sm:py-20">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="text-sm font-semibold text-forest">The process</p>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          How Mary lists your home
+        </h2>
+      </div>
+      <ol class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          steps.map((step) => (
+            <li class="rounded-3xl bg-white p-6 shadow-card sm:p-7">
+              <p class="text-sm font-bold text-lime-deep">{step.n}</p>
+              <h3 class="mt-3 text-lg font-bold text-ink">{step.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted">{step.copy}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="bg-white py-16 sm:py-20">
+    <div class="container-site grid gap-8 lg:grid-cols-2">
+      <div>
+        <p class="text-sm font-semibold text-forest">Seller stories</p>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-ink">
+          What sellers say
+        </h2>
+        <div class="mt-8 space-y-5">
+          {
+            testimonials.slice(0, 2).map((t) => (
+              <TestimonialCard testimonial={t} />
+            ))
+          }
+        </div>
+      </div>
+      <div id="valuation">
+        <ContactForm
+          heading="Home valuation / selling consultation"
+          defaultType="sell"
+        />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

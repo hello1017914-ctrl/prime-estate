@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { site } from "../data/site";
+
+const defaultType = Astro.url.searchParams.get("type") || "";
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contact Mary Wassef - Houston Heights Realtor®. Reach out to buy, sell, or schedule a consultation."
+>
+  <section class="bg-forest-deep pb-16 pt-32 text-white">
+    <div class="container-site max-w-3xl">
+      <p class="text-sm font-semibold text-lime">Let’s connect</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl text-balance">
+        Contact us today
+      </h1>
+      <p class="mt-4 max-w-xl text-white/75 leading-relaxed">
+        Share a few details about buying, selling, or a consultation. Mary or her
+        team will follow up.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-snow py-16 sm:py-20">
+    <div class="container-site grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+      <aside class="space-y-6">
+        <div class="rounded-3xl bg-white p-6 shadow-card sm:p-8">
+          <h2 class="text-xl font-bold text-ink">{site.name}</h2>
+          <p class="mt-1 text-sm text-muted">
+            {site.title} · {site.credentials}
+          </p>
+          <ul class="mt-6 space-y-4 text-sm">
+            <li>
+              <p class="font-semibold text-ink">Email</p>
+              <a class="text-muted hover:text-forest" href={`mailto:${site.email}`}
+                >{site.email}</a
+              >
+            </li>
+            <li>
+              <p class="font-semibold text-ink">Mobile</p>
+              <a class="text-muted hover:text-forest" href={site.mobileHref}
+                >{site.mobile}</a
+              >
+            </li>
+            <li>
+              <p class="font-semibold text-ink">Office</p>
+              <a class="text-muted hover:text-forest" href={site.officeHref}
+                >{site.office}</a
+              >
+            </li>
+            <li>
+              <p class="font-semibold text-ink">Office address</p>
+              <p class="text-muted">
+                {site.address.line1}<br />
+                {site.address.line2}
+              </p>
+            </li>
+          </ul>
+        </div>
+        <div class="rounded-3xl bg-forest p-6 text-white sm:p-8">
+          <p class="text-sm font-semibold text-lime">Prefer to talk?</p>
+          <p class="mt-2 text-lg font-semibold tracking-tight">
+            Call or text Mary directly
+          </p>
+          <a
+            href={site.mobileHref}
+            class="mt-4 inline-flex rounded-full bg-lime px-5 py-2.5 text-sm font-semibold text-ink hover:bg-lime-deep"
+          >
+            {site.mobile}
+          </a>
+        </div>
+      </aside>
+
+      <ContactForm heading="Send an inquiry" defaultType={defaultType} />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+{
+  "name": "mary-wassef",
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "astro dev --port 4327 --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --port 4327 --host 0.0.0.0",
+    "astro": "astro",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

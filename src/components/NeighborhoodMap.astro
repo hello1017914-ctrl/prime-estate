@@ -1,0 +1,172 @@
+---
+import { neighborhoods, mapExtraPins } from "../data/neighborhoods";
+
+const pins = [
+  ...neighborhoods.map((n) => ({
+    slug: n.slug,
+    label: n.mapLabel,
+    left: n.mapPin.left,
+    top: n.mapPin.top,
+  })),
+  ...mapExtraPins,
+];
+---
+
+<section class="bg-white py-10 sm:py-14" aria-label="Interactive Heights neighborhood map">
+  <div class="container-site">
+    <div
+      class="relative overflow-hidden rounded-3xl border border-line bg-[#dfe4e8] shadow-card"
+      data-neighborhood-map
+    >
+      <img
+        src="/images/map/heights-map.png"
+        alt="Illustrated map of Houston Heights and nearby neighborhoods"
+        class="block h-auto w-full select-none"
+        width="1447"
+        height="1087"
+        fetchpriority="high"
+        draggable="false"
+      />
+
+      {
+        pins.map((pin) => (
+          <button
+            type="button"
+            class="map-label absolute z-10 -translate-x-1/2 -translate-y-1/2"
+            style={`left:${pin.left}%;top:${pin.top}%;`}
+            data-map-pin
+            data-target={pin.slug}
+            aria-label={`View ${pin.label}`}
+          >
+            <span class="map-label-text">{pin.label}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const scrollToNeighborhood = (slug: string) => {
+    const section = document.getElementById(slug);
+    if (!section) return;
+    section.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+    section.setAttribute("data-flash", "true");
+    window.setTimeout(() => section.removeAttribute("data-flash"), 1100);
+    history.replaceState(null, "", `#${slug}`);
+  };
+
+  const setActive = (slug: string) => {
+    document.querySelectorAll("[data-map-pin]").forEach((el) => {
+      el.setAttribute("data-active", String(el.getAttribute("data-target") === slug));
+    });
+    document.querySelectorAll("[data-neighborhood-section]").forEach((el) => {
+      el.setAttribute("data-active", String(el.getAttribute("id") === slug));
+    });
+  };
+
+  document.querySelectorAll("[data-map-pin]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const slug = el.getAttribute("data-target");
+      if (!slug) return;
+      setActive(slug);
+      scrollToNeighborhood(slug);
+    });
+  });
+
+  const sections = document.querySelectorAll("[data-neighborhood-section]");
+  if ("IntersectionObserver" in window && sections.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target?.id) setActive(visible.target.id);
+      },
+      { rootMargin: "-35% 0px -45% 0px", threshold: [0.2, 0.45, 0.65] },
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+
+  if (location.hash) {
+    const slug = location.hash.replace("#", "");
+    if (document.getElementById(slug)) {
+      setActive(slug);
+      window.setTimeout(() => scrollToNeighborhood(slug), 60);
+    }
+  }
+</script>
+
+<style>
+  .map-label {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .map-label-text {
+    display: inline-block;
+    border: 1.5px solid #e8dfb8;
+    background: #142844;
+    color: #f4efe0;
+    font-size: clamp(0.45rem, 1.15vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    padding: 0.35em 0.7em;
+    box-shadow: 0 2px 8px rgba(15, 36, 28, 0.18);
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease;
+  }
+
+  .map-label:hover .map-label-text,
+  .map-label:focus-visible .map-label-text,
+  .map-label[data-active="true"] .map-label-text {
+    background: #0f241c;
+    border-color: #c8f000;
+    box-shadow:
+      0 0 0 3px rgba(200, 240, 0, 0.35),
+      0 8px 20px rgba(15, 36, 28, 0.22);
+    transform: scale(1.04);
+  }
+
+  .map-label:focus-visible {
+    outline: none;
+  }
+
+  [data-neighborhood-section] {
+    scroll-margin-top: 6rem;
+    transition:
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.45s ease;
+  }
+
+  [data-neighborhood-section][data-active="true"] {
+    border-color: rgba(26, 60, 46, 0.28);
+  }
+
+  [data-neighborhood-section][data-flash="true"] {
+    box-shadow: 0 0 0 3px rgba(200, 240, 0, 0.75);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-label-text,
+    [data-neighborhood-section] {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import { site, navLinks } from "../data/site";
+---
+
+<footer class="mt-auto bg-forest-deep text-white">
+  <div class="container-site grid gap-12 py-16 md:grid-cols-[1.3fr_1fr_1fr]">
+    <div>
+      <div class="flex items-center gap-3">
+        <span
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-lime text-sm font-bold text-ink"
+          >MW</span
+        >
+        <div>
+          <p class="text-lg font-bold tracking-tight">{site.name}</p>
+          <p class="text-xs text-white/60">{site.tagline}</p>
+        </div>
+      </div>
+      <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/70">
+        Houston Heights real estate for buyers and sellers, with {site.brokerage}.
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-lime">Explore</p>
+      <ul class="mt-4 space-y-2.5">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-sm text-white/75 transition hover:text-white"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-lime">Contact</p>
+      <ul class="mt-4 space-y-3 text-sm text-white/75">
+        <li>
+          <a class="hover:text-white" href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+        <li>
+          Mobile:
+          <a class="hover:text-white" href={site.mobileHref}>{site.mobile}</a>
+        </li>
+        <li>
+          Office:
+          <a class="hover:text-white" href={site.officeHref}>{site.office}</a>
+        </li>
+        <li class="leading-relaxed">
+          {site.address.line1}<br />
+          {site.address.line2}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div
+      class="container-site flex flex-col gap-2 py-5 text-xs text-white/45 sm:flex-row sm:justify-between"
+    >
+      <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+      <p>{site.brokerage} · Houston, Texas</p>
+    </div>
+  </div>
+</footer>

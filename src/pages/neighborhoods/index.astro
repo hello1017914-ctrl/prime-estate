@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NeighborhoodMap from "../../components/NeighborhoodMap.astro";
+import Button from "../../components/Button.astro";
+import { neighborhoods } from "../../data/neighborhoods";
+---
+
+<BaseLayout
+  title="Neighborhoods"
+  description="Interactive map of Houston Heights, Lazybrook/Timbergrove, Woodland Heights, Norhill, Shady Acres, Garden Oaks, and more with Mary Wassef."
+>
+  <section class="bg-forest-deep pb-14 pt-32 text-white">
+    <div class="container-site max-w-3xl">
+      <p class="text-sm font-semibold text-lime">Neighborhoods</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl text-balance">
+        See the map. Find your neighborhood.
+      </h1>
+      <p class="mt-4 max-w-2xl text-white/75 leading-relaxed">
+        Not sure where to buy? Tap a neighborhood on the map to jump straight to
+        its photos and a short local overview.
+      </p>
+    </div>
+  </section>
+
+  <NeighborhoodMap />
+
+  <section class="bg-snow pb-20 pt-4 sm:pb-24" aria-label="Neighborhood guides">
+    <div class="container-site space-y-8">
+      {
+        neighborhoods.map((n, index) => (
+          <article
+            id={n.slug}
+            data-neighborhood-section
+            class="overflow-hidden rounded-3xl border border-transparent bg-white shadow-card"
+          >
+            <div
+              class:list={[
+                "grid items-stretch lg:grid-cols-2",
+                index % 2 === 1 ? "lg:[&>div:first-child]:order-2" : "",
+              ]}
+            >
+              <div class="relative min-h-[260px] overflow-hidden bg-mist sm:min-h-[320px]">
+                <img
+                  src={n.image}
+                  alt={`Homes in ${n.name}`}
+                  class="absolute inset-0 h-full w-full object-cover"
+                  width="1200"
+                  height="800"
+                  loading={index < 2 ? "eager" : "lazy"}
+                />
+              </div>
+              <div class="flex flex-col justify-center p-6 sm:p-10">
+                <p class="text-xs font-semibold uppercase tracking-[0.16em] text-forest">
+                  {n.priceRange}
+                </p>
+                <h2 class="mt-2 text-3xl font-bold tracking-tight text-ink">
+                  {n.name}
+                </h2>
+                <p class="mt-4 text-muted leading-relaxed">{n.body[0]}</p>
+                <ul class="mt-5 flex flex-wrap gap-2">
+                  {n.highlights.map((item) => (
+                    <li class="rounded-full bg-mist px-3 py-1 text-xs font-semibold text-ink">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div class="mt-7 flex flex-wrap gap-3">
+                  <Button href={`/neighborhoods/${n.slug}`} variant="dark">
+                    Full guide
+                  </Button>
+                  <Button href="/contact" variant="secondary">
+                    Ask Mary
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

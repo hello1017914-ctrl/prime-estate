@@ -1,0 +1,233 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  heading?: string;
+  defaultType?: string;
+}
+
+const { heading = "Send a message", defaultType = "" } = Astro.props;
+---
+
+<form
+  class="space-y-5 rounded-3xl bg-white p-6 shadow-card sm:p-8"
+  data-contact-form
+  novalidate
+  aria-labelledby="contact-form-heading"
+>
+  <h2 id="contact-form-heading" class="text-2xl font-bold tracking-tight text-ink">
+    {heading}
+  </h2>
+
+  <p class="text-sm text-muted" data-form-note>
+    This form validates locally. Connect Formspree, Resend, or your brokerage CRM
+    to deliver submissions to
+    <span class="font-semibold text-ink">mary@marywassef.com</span>.
+  </p>
+
+  <div class="hidden" aria-hidden="true">
+    <label>
+      Company
+      <input type="text" name="company" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="firstName" class="mb-1.5 block text-sm font-semibold text-ink"
+        >First name</label
+      >
+      <input
+        id="firstName"
+        name="firstName"
+        type="text"
+        required
+        autocomplete="given-name"
+        class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+      />
+      <p class="mt-1 hidden text-sm text-red-700" data-error-for="firstName"></p>
+    </div>
+    <div>
+      <label for="lastName" class="mb-1.5 block text-sm font-semibold text-ink"
+        >Last name</label
+      >
+      <input
+        id="lastName"
+        name="lastName"
+        type="text"
+        required
+        autocomplete="family-name"
+        class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+      />
+      <p class="mt-1 hidden text-sm text-red-700" data-error-for="lastName"></p>
+    </div>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="email" class="mb-1.5 block text-sm font-semibold text-ink"
+        >Email</label
+      >
+      <input
+        id="email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+      />
+      <p class="mt-1 hidden text-sm text-red-700" data-error-for="email"></p>
+    </div>
+    <div>
+      <label for="phone" class="mb-1.5 block text-sm font-semibold text-ink"
+        >Phone</label
+      >
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+      />
+      <p class="mt-1 hidden text-sm text-red-700" data-error-for="phone"></p>
+    </div>
+  </div>
+
+  <div>
+    <label for="inquiryType" class="mb-1.5 block text-sm font-semibold text-ink"
+      >Inquiry type</label
+    >
+    <select
+      id="inquiryType"
+      name="inquiryType"
+      required
+      class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+    >
+      <option value="" disabled selected={!defaultType}>Select one</option>
+      <option value="buy" selected={defaultType === "buy"}>Buy a home</option>
+      <option value="sell" selected={defaultType === "sell"}>Sell a home</option>
+      <option value="consultation" selected={defaultType === "consultation"}
+        >Consultation</option
+      >
+      <option value="other" selected={defaultType === "other"}>Other</option>
+    </select>
+    <p class="mt-1 hidden text-sm text-red-700" data-error-for="inquiryType"></p>
+  </div>
+
+  <div>
+    <label for="message" class="mb-1.5 block text-sm font-semibold text-ink"
+      >Message</label
+    >
+    <textarea
+      id="message"
+      name="message"
+      rows="5"
+      required
+      class="w-full rounded-2xl border border-line bg-snow px-4 py-3 text-ink outline-none transition focus:border-forest"
+    ></textarea>
+    <p class="mt-1 hidden text-sm text-red-700" data-error-for="message"></p>
+  </div>
+
+  <div
+    class="hidden rounded-2xl border border-forest/20 bg-lime-soft/50 px-4 py-3 text-sm text-forest"
+    data-form-success
+    role="status"
+  >
+    Thanks. Your message looks ready to send. Email delivery is not connected
+    yet, so please reach Mary directly at mary@marywassef.com or 713.398.8719
+    for now.
+  </div>
+
+  <div
+    class="hidden rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800"
+    data-form-error
+    role="alert"
+  >
+  </div>
+
+  <Button type="submit" variant="dark" class="w-full sm:w-auto">
+    <span data-submit-label>Send inquiry</span>
+    <span class="hidden" data-submit-loading>Sending…</span>
+  </Button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+  if (form) {
+    const success = form.querySelector("[data-form-success]");
+    const errorBox = form.querySelector("[data-form-error]");
+    const submitLabel = form.querySelector("[data-submit-label]");
+    const submitLoading = form.querySelector("[data-submit-loading]");
+    const note = form.querySelector("[data-form-note]");
+
+    const clearErrors = () => {
+      form.querySelectorAll("[data-error-for]").forEach((el) => {
+        el.classList.add("hidden");
+        el.textContent = "";
+      });
+      errorBox?.classList.add("hidden");
+    };
+
+    const showFieldError = (name: string, message: string) => {
+      const el = form.querySelector(`[data-error-for="${name}"]`);
+      if (el) {
+        el.textContent = message;
+        el.classList.remove("hidden");
+      }
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearErrors();
+      success?.classList.add("hidden");
+
+      const data = new FormData(form);
+      if ((data.get("company") as string)?.trim()) return;
+
+      let valid = true;
+      const firstName = String(data.get("firstName") || "").trim();
+      const lastName = String(data.get("lastName") || "").trim();
+      const email = String(data.get("email") || "").trim();
+      const inquiryType = String(data.get("inquiryType") || "").trim();
+      const message = String(data.get("message") || "").trim();
+
+      if (!firstName) {
+        showFieldError("firstName", "First name is required.");
+        valid = false;
+      }
+      if (!lastName) {
+        showFieldError("lastName", "Last name is required.");
+        valid = false;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showFieldError("email", "Enter a valid email address.");
+        valid = false;
+      }
+      if (!inquiryType) {
+        showFieldError("inquiryType", "Please select an inquiry type.");
+        valid = false;
+      }
+      if (!message || message.length < 10) {
+        showFieldError("message", "Please share a bit more detail (10+ characters).");
+        valid = false;
+      }
+
+      if (!valid) {
+        if (errorBox) {
+          errorBox.textContent = "Please fix the highlighted fields and try again.";
+          errorBox.classList.remove("hidden");
+        }
+        return;
+      }
+
+      submitLabel?.classList.add("hidden");
+      submitLoading?.classList.remove("hidden");
+      await new Promise((r) => setTimeout(r, 600));
+      submitLabel?.classList.remove("hidden");
+      submitLoading?.classList.add("hidden");
+      success?.classList.remove("hidden");
+      note?.classList.add("hidden");
+      form.reset();
+    });
+  }
+</script>

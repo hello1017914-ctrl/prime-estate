@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/Button.astro";
+import { neighborhoods, getNeighborhoodBySlug } from "../../data/neighborhoods";
+
+export function getStaticPaths() {
+  return neighborhoods.map((n) => ({
+    params: { slug: n.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const neighborhood = getNeighborhoodBySlug(slug!)!;
+---
+
+<BaseLayout
+  title={neighborhood.name}
+  description={neighborhood.summary}
+  image={neighborhood.image}
+>
+  <section class="relative overflow-hidden bg-forest-deep pb-20 pt-32 text-white">
+    <img
+      src={neighborhood.image}
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover opacity-40"
+      width="1000"
+      height="800"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-forest-deep via-forest-deep/80 to-forest-deep/50"></div>
+    <div class="container-site relative max-w-3xl">
+      <a href="/neighborhoods" class="text-sm font-semibold text-lime hover:underline"
+        >← All neighborhoods</a
+      >
+      <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl text-balance">
+        {neighborhood.name}
+      </h1>
+      <p class="mt-4 text-lg text-white/80">{neighborhood.summary}</p>
+      <p class="mt-4 inline-flex rounded-full bg-lime px-4 py-1.5 text-sm font-semibold text-ink">
+        Typical range: {neighborhood.priceRange}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-snow py-16 sm:py-20">
+    <div class="container-site grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+      <div class="space-y-5 text-muted leading-relaxed">
+        {neighborhood.body.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <aside class="space-y-5">
+        <div class="rounded-3xl bg-white p-6 shadow-card sm:p-8">
+          <h2 class="text-lg font-bold text-ink">Highlights</h2>
+          <ul class="mt-4 space-y-3">
+            {
+              neighborhood.highlights.map((item) => (
+                <li class="flex gap-3 text-sm text-muted">
+                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-lime"></span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="rounded-3xl bg-forest p-6 text-white sm:p-8">
+          <h2 class="text-lg font-bold">Tour this neighborhood</h2>
+          <p class="mt-2 text-sm text-white/75">
+            Mary can walk you through inventory, schools, and lifestyle fit.
+          </p>
+          <div class="mt-5">
+            <Button href="/contact" variant="primary">Ask Mary</Button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

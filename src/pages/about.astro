@@ -1,0 +1,143 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import { site } from "../data/site";
+
+const highlights = [
+  {
+    label: "Forbes Real Estate Council",
+    detail: "Invited member advising on luxury markets and client advocacy.",
+  },
+  {
+    label: "Top 1% Houston Realtors®",
+    detail: "A decade-plus ranking among Houston’s top producing agents.",
+  },
+  {
+    label: "Five-Star Google rating",
+    detail: "Consistent five-star client feedback for more than ten years.",
+  },
+  {
+    label: "Listings within 2% of price",
+    detail: "Seller strategy that keeps list and sale prices tightly aligned.",
+  },
+  {
+    label: `Real estate since ${site.careerStart}`,
+    detail: `${site.yearsInRealEstate}+ years helping buyers and sellers close with clarity.`,
+  },
+  {
+    label: `${site.yearsInHeights}+ years in the Heights`,
+    detail: "Local residency and market instincts that only come from living here.",
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="About Mary Wassef: Team Lead and Broker Associate, Five-Star Houston Heights Realtor®, Forbes Real Estate Council member, with deep experience in luxury and historic homes."
+>
+  <section class="bg-forest-deep pb-16 pt-32 text-white">
+    <div class="container-site max-w-3xl">
+      <p class="text-sm font-semibold text-lime">About</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+        Mary Wassef
+      </h1>
+      <p class="mt-3 text-white/75">
+        {site.title} · {site.credentials}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-snow py-16 sm:py-20">
+    <div class="container-site grid items-start gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
+      <figure class="about-portrait relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+        <div class="about-portrait-frame overflow-hidden bg-mist">
+          <img
+            src="/images/agent/mary-about-portrait.png"
+            alt="Mary Wassef seated at a dining table in Houston"
+            class="aspect-[2/3] w-full object-cover object-[center_18%]"
+            width="720"
+            height="1080"
+            fetchpriority="high"
+          />
+        </div>
+        <figcaption class="mt-4 text-sm text-muted">
+          {site.tagline} · {site.brokerage}
+        </figcaption>
+      </figure>
+
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl text-balance">
+          Team lead. Broker associate. Heights specialist.
+        </h2>
+        <div class="mt-6 space-y-4 text-muted leading-relaxed">
+          <p>
+            A distinguished Five-Star Realtor® in Houston Heights, Mary brings two
+            decades of local residency and {site.yearsInRealEstate} years of real
+            estate experience to her clients. She has ranked in the Top 1% of all
+            Realtors® in Houston for over a decade and is a member of the Forbes
+            Real Estate Council.
+          </p>
+          <p>
+            Mary specializes in luxury and historic homes in the Houston Heights
+            and surrounding areas. Her builder relationships and involvement in
+            local organizations make her a practical resource for clients who want
+            clear guidance in this market.
+          </p>
+        </div>
+
+        <div class="mt-10">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-forest">
+            Why clients choose Mary
+          </p>
+          <ul class="mt-5 divide-y divide-line border-y border-line">
+            {
+              highlights.map((item, index) => (
+                <li class="highlight-row group grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 py-5 sm:gap-x-5">
+                  <span
+                    class="highlight-index mt-0.5 font-bold tabular-nums text-forest/35 transition-colors duration-300 group-hover:text-forest"
+                    aria-hidden="true"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <p class="font-semibold tracking-tight text-ink">{item.label}</p>
+                    <p class="mt-1 text-sm leading-relaxed text-muted">{item.detail}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <Button href="/contact" variant="primary">Work with Mary</Button>
+          <Button href="/client-stories" variant="secondary">Client stories</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-portrait-frame {
+    border-radius: 1.75rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .highlight-index {
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    min-width: 1.75rem;
+  }
+
+  .highlight-row {
+    transition: background-color 0.25s var(--ease-out-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .highlight-row,
+    .highlight-index {
+      transition: none;
+    }
+  }
+</style>
